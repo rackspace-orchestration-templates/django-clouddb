@@ -3,6 +3,39 @@ heat_template_version: 2013-05-23
 description: |
   Heat template to deploy a load balancer, multiple servers running Django, and a Cloud Database
 
+parameter_groups:
+
+- label: Server Settings
+  parameters:
+  - server_hostname
+  - flavor
+  - image
+  - server_count
+
+- label: Database Settings
+  parameters:
+  - db_flavor
+  - db_user
+  - db_size
+
+- label: Django Settings
+  parameters:
+  - project_name
+  - app_name
+  - django_admin_user
+  - django_admin_email
+  - virtualenv
+  - venv_username
+
+- label: rax-dev-params
+  # These are parameters that will not be displayed in the portal. The purpose
+  # of these parameters are for users who are developing or testing newer or
+  # different setups. If any of these parameters are changed, there is a good
+  # chance this stack will fail to properly deploy.
+  parameters:
+  - kitchen
+  - chef_version
+
 parameters:
 
   load_balancer_hostname:
@@ -62,7 +95,6 @@ parameters:
       - 30 GB Performance
       - 60 GB Performance
       - 90 GB Performance
-      - 512MB Standard Instance
       - 1GB Standard Instance
       - 2GB Standard Instance
       - 4GB Standard Instance
@@ -99,12 +131,6 @@ parameters:
         Must be shorter than 16 characters, this is due to MySQL's maximum
         username length.
 
-  db_pass:
-    type: string
-    hidden: true
-    description: Database access password
-    default: secret123
-
   db_size:
     type: number
     description: Size of the Rackspace Cloud Database
@@ -115,11 +141,6 @@ parameters:
         max: 150
     description: |
         Database instance size, in GB. min 10, max 150
-
-  ssh_keypair_name:
-    description: Nova keypair name for ssh access to the server
-    type: string
-    default: django-app
 
   virtualenv:
     label: virtualenv
@@ -165,12 +186,6 @@ parameters:
       description: |
           Must be less than 512 chanracters.
 
-  django_admin_pass:
-    type: string
-    hidden: true
-    description: Django admin password
-    default: secret123
-
   venv_username:
     label: System User
     type: string
@@ -184,12 +199,25 @@ parameters:
       description: alphanumeric, lowercase, and not root.
 
 resources:
-
+  # SSH keys
   ssh_key:
     type: "OS::Nova::KeyPair"
     properties:
-      name: { get_param: ssh_keypair_name }
+      name: { get_param: "OS::stack_id" }
       save_private_key: true
+
+  # Password Generation
+  django_admin_pass:
+    type: "OS::Heat::RandomString"
+    properties:
+      length: 16
+      sequence: hexdigits
+
+  db_pass:
+    type: "OS::Heat::RandomString"
+    properties:
+      length: 16
+      sequence: hexdigits
 
   service_db:
     type: OS::Trove::Instance
@@ -201,7 +229,7 @@ resources:
       - name: app_data
       users:
       - name: { get_param: db_user }
-        password: { get_param: db_pass }
+        password: { get_attr: [db_pass, value] }
         databases: [ app_data ]
 
   django_setup:
@@ -223,9 +251,9 @@ resources:
           project_name: { get_param: project_name }
           django_admin_user: { get_param: django_admin_user }
           django_admin_email: { get_param: django_admin_email }
-          django_admin_pass: { get_param: django_admin_pass }
+          django_admin_pass: { get_attr: [django_admin_pass, value] }
           db_user: { get_param: db_user }
-          db_pass:  { get_param: db_pass }
+          db_pass:  { get_attr: [db_pass, value] }
           database_host: { get_attr: [service_db, hostname] }
 
   load_balancer:
@@ -248,11 +276,37 @@ resources:
 
 outputs:
   private_key:
+    description: "Private Key"
     value: { get_attr: [ssh_key, private_key] }
 
   load_balancer_ip:
+    description: "Load Balancer IP"
     value: { get_attr: [load_balancer, PublicIp]}
 
-  "DB ID":
-    value: { get_resource: service_db }
-    description: Database instance ID
+  django_url:
+    description: "Django URL"
+    value:
+      str_replace:
+        template: "http://%ip%"
+        params:
+          "%ip%": { get_attr: [load_balancer, PublicIp] }
+
+  db_host:
+    value: { get_attr: [service_db, hostname] }
+    description: "Database Host"
+
+  db_user:
+    value: { get_param: db_user }
+    description: "Database Username"
+
+  db_pass:
+    value: { get_attr: [db_pass, value] }
+    description: "Database User Password"
+
+  db_name:
+    value: "app_data"
+    description: "Database Name"
+
+  django_admin_pass:
+    value: { get_attr: [django_admin_pass, value] }
+    description: "Django Admin Password"
