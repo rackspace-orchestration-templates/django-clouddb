@@ -55,14 +55,14 @@ the `-P` flag to specify a custom parameter.
 * `app_name`: The name of your application.
 * `flavor`: cloud server size to use. (Default: 4 GB Performance)
 * `virtualenv`: The location of the Python virtualenv (Default: /srv)
-* `project_name`: The name of your Django project.
-* `django_admin_user`: The admin username to login to Django.
-* `django_admin_email`: The email address for the Django admin user.
-* `django_admin_pass`: The password for the Django admin user.
-* `db_user`: The MySQL database user for your Django application.
-* `db_pass`: The MySQL database password for your Django application.
-* `ssh_keypair_name`: Name of the SSH key pair to register with nova (Default:
-  none)
+* `venv_username`: Username to use for the Python virtualenv (Default: pydev)
+* `project_name`: The name of your Django project. (Default: mysite)
+* `django_admin_user`: The admin username to login to Django. (Default:
+  djangouser)
+* `django_admin_email`: The email address for the Django admin user. (Default:
+  admin@example.com)
+* `db_user`: The MySQL database user for your Django application. (Default:
+  db_user)
 
 Outputs
 =======
@@ -71,7 +71,11 @@ Use `heat output-show <OUTPUT NAME>` to get the value fo a specific output.
 
 * `private_key`: SSH private that can be used to login as root to the server(s).
 * `load_balancer_ip`: Public IP address of the Cloud Load Balancer
-* `DB ID`: The Instance ID of the Cloud Database
+* `django_url`: URL to access this Django deployment
+* `db_host`: The hostname of the Cloud Database that was created.
+* `db_user`: The username for logging into `db_host`.
+* `db_pass`: The password for `db_user`.
+* `db_name`: Name of the database hosted on `db_host`.
 
 For multi-line values, the response will come in an escaped form. To get rid of
 the escapes, use `echo -e '<STRING>' > file.txt`. For vim users, a substitution
