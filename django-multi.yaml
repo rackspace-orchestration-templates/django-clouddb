@@ -198,6 +198,11 @@ parameters:
     - allowed_pattern: "^(?!^root$)([a-z_][a-z0-9_]{0,30})$"
       description: alphanumeric, lowercase, and not root.
 
+  child_template:
+    label: Child Template
+    type: string
+    default: https://raw.github.com/rackspace-orchestration-templates/django-clouddb/master/django-single.yaml
+
 resources:
   # SSH keys
   ssh_key:
@@ -238,7 +243,7 @@ resources:
     properties:
       count: { get_param: server_count }
       resource_def:
-        type: https://raw.github.com/rackspace-orchestration-templates/django-clouddb/master/django-single.yaml
+        type: { get_param: child_template }
         properties:
           venv_username: { get_param: venv_username }
           private_key: { get_attr: [ssh_key, private_key] }
