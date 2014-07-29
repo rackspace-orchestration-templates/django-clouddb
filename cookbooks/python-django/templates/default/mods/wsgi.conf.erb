@@ -42,7 +42,7 @@
     #Used to specify additional directories to search for Python modules.
     #If multiple directories are specified they should be separated by a ':'.
 
-        #WSGIPythonPath directory|directory-1:directory-2:...
+    WSGIPythonPath <%= "/srv/#{node['django']['virtualenv']}/#{node['django']['project_name']}" %>
 
 
     #WSGIPythonEggs: Directory to use for Python eggs cache.
