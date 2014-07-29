@@ -153,6 +153,19 @@ parameters:
     type: string
     default: false
 
+  kitchen:
+    label: Kitchen
+    description: |
+      URL for the kitchen to use, fetched using git
+    type: string
+    default: https://github.com/rackspace-orchestration-templates/django-clouddb
+
+  chef_version:
+    label: Chef Version
+    description: Version of chef client to use
+    type: string
+    default: 11.12.8
+
 resources:
   django_server:
     type: "Rackspace::Cloud::Server"
@@ -161,41 +174,18 @@ resources:
       flavor: { get_param: flavor }
       image: { get_param: image }
       key_name: { get_param: ssh_keypair_name }
-
-  bootstrap_server:
-    type: "OS::Heat::ChefSolo"
-    properties:
-      username: root
-      private_key: { get_param: private_key }
-      host: { get_attr: [django_server, accessIPv4] }
-      Berksfile: |
-        site :opscode
-
-        cookbook 'apt'
-        cookbook 'build-essential'
-      node:
-        run_list: ["recipe[apt]",
-                   "recipe[build-essential]"]
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
 
   django_setup:
     type: "OS::Heat::ChefSolo"
-    depends_on: bootstrap_server
+    depends_on: django_server
     properties:
       username: root
       private_key: { get_param: private_key }
       host: { get_attr: [django_server, accessIPv4] }
-      Berksfile: |
-        site :opscode
-
-        cookbook 'build-essential'
-        cookbook 'apt'
-        cookbook 'chef-client'
-        cookbook 'apache2'
-        cookbook 'python'
-        cookbook 'python-django',
-          :git => 'https://github.com/hhoover/python-django.git'
-        cookbook 'sudo'
-
+      kitchen: { get_param: kitchen }
+      chef_version: { get_param: chef_version }
       node:
         django:
           username: { get_param: venv_username }
@@ -209,9 +199,14 @@ resources:
           django_admin_user: { get_param: django_admin_user }
           django_admin_email: { get_param: django_admin_email }
           django_admin_pass: { get_param: django_admin_pass }
-        run_list: ["recipe[python-django]"]
+        run_list: ["recipe[apt]",
+                   "recipe[build-essential]",
+                   "recipe[python-django]"]
 
 outputs:
 
- server_ip:
+ privateIPv4:
     value: { get_attr: [django_server, privateIPv4] }
+
+  accessIPv4:
+    value: { get_attr: [django_server, accessIPv4] }
