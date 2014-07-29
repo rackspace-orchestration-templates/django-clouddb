@@ -264,7 +264,7 @@ resources:
           server_hostname: { get_param: server_hostname }
           image: { get_param: image }
           flavor: { get_param: flavor }
-          ssh_keypair_name: { get_param: ssh_keypair_name }
+          ssh_keypair_name: { get_resource: ssh_key }
           virtualenv: { get_param: virtualenv }
           project_name: { get_param: project_name }
           django_admin_user: { get_param: django_admin_user }

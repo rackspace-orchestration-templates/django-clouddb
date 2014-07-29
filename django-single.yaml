@@ -205,7 +205,7 @@ resources:
 
 outputs:
 
- privateIPv4:
+  privateIPv4:
     value: { get_attr: [django_server, privateIPv4] }
 
   accessIPv4:
