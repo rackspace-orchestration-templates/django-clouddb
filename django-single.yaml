@@ -199,9 +199,13 @@ resources:
           django_admin_user: { get_param: django_admin_user }
           django_admin_email: { get_param: django_admin_email }
           django_admin_pass: { get_param: django_admin_pass }
+        rax:
+          firewall:
+            tcp: [80]
         run_list: ["recipe[apt]",
                    "recipe[build-essential]",
-                   "recipe[python-django]"]
+                   "recipe[python-django]",
+                   "recipe[rax-firewall]"]
 
 outputs:
 
