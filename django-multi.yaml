@@ -7,7 +7,6 @@ parameter_groups:
 
 - label: Server Settings
   parameters:
-  - server_hostname
   - flavor
   - image
   - server_count
@@ -34,12 +33,15 @@ parameter_groups:
   # different setups. If any of these parameters are changed, there is a good
   # chance this stack will fail to properly deploy.
   parameters:
+  - load_balancer_hostname
+  - server_hostname
   - kitchen
   - chef_version
 
 parameters:
 
   load_balancer_hostname:
+    label: Hostname
     description: Hostname for the Load Balancer
     type: string
     default: Django-Load-Balancer
@@ -52,7 +54,8 @@ parameters:
         Must begin with a letter and contain only alphanumeric characters.
 
   server_hostname:
-    description: Server Name
+    label: Server Hostname
+    description: Host name to give the servers provisioned
     type: string
     default: django
     constraints:
@@ -64,6 +67,7 @@ parameters:
         Must begin with a letter and contain only alphanumeric characters.
 
   server_count:
+    label: Server Count
     description: Number of servers to deploy
     type: number
     default: 1
@@ -74,7 +78,10 @@ parameters:
       description: Must be between 0 and 24 servers.
 
   image:
-    description: Server Image
+    label: Operating System
+    description: |
+      Required: Server image used for all servers that are created as a part of
+      this deployment.
     type: string
     default: Ubuntu 12.04 LTS (Precise Pangolin)
     constraints:
@@ -83,7 +90,10 @@ parameters:
       description: Must be a supported operating system.
 
   flavor:
-    description: Rackspace Cloud Server flavor
+    label: Server Size
+    description: |
+      Required: Rackspace Cloud Server flavor to use. The size is based on the
+      amount of RAM for the provisioned server.
     type: string
     default: 4 GB Performance
     constraints:
@@ -107,7 +117,10 @@ parameters:
         selected to deploy into.
 
   db_flavor:
-    description: Rackspace Cloud Database Flavor
+    label: Cloud Database Size
+    description: |
+      Required: Rackspace Cloud Database Flavor. Size is based on amount of RAM
+      for the provisioned instance.
     type: string
     default: 1GB Instance
     constraints:
@@ -123,7 +136,9 @@ parameters:
         selected to deploy into.
 
   db_user:
-    description: Username for the database.
+    label: Database Username
+    description: |
+      Required: Username for the database.
     type: string
     default: db_user
     constraints:
@@ -133,8 +148,11 @@ parameters:
         username length.
 
   db_size:
+    label: Database Size
+    description: |
+      Required: Amount of storage required for your Rackspace Cloud Database,
+      in GB.
     type: number
-    description: Size of the Rackspace Cloud Database
     default: 10
     constraints:
     - range:
@@ -163,6 +181,8 @@ parameters:
       It will be created in the /srv directory.
 
   project_name:
+    label: Project Name
+    description: Name of your Django project.
     type: string
     description: The name to use to create your Django project.
     default: mysite
@@ -172,8 +192,9 @@ parameters:
           Must be alphanumeric and fewer than 32 chanracters.
 
   app_name:
+    label: Application Name
     type: string
-    description: The name of your app.
+    description: The name of your Django application.
     default: myapp
     constraints:
     - allowed_pattern: "^[A-Za-z0-9_]{1,31}$"
@@ -181,8 +202,9 @@ parameters:
           Must be alphanumeric and fewer than 32 chanracters.
 
   django_admin_user:
+    label: Admin User
     type: string
-    description: Username for login to Django
+    description: Administrative username for logging into Django.
     default: djangouser
     constraints:
     - allowed_pattern: "^(?=.*).{0,256}$"
@@ -190,6 +212,9 @@ parameters:
           Must be less than 256 chanracters.
 
   django_admin_email:
+    label: Admin Email
+    description: |
+      Email address for the administrative user for this Django site.
     type: string
     description: Email address
     default: admin@example.com
@@ -225,6 +250,7 @@ parameters:
 
   child_template:
     label: Child Template
+    description: Location of child template
     type: string
     default: https://raw.github.com/rackspace-orchestration-templates/django-clouddb/master/django-single.yaml
 
