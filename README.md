@@ -9,7 +9,12 @@ will also be deployed. This template is leveraging
 
 Requirements
 ============
-* A Heat provider that supports the Rackspace `OS::Heat::ChefSolo` plugin.
+* A Heat provider that supports the following:
+  * OS::Nova::KeyPair
+  * OS::Heat::RandomString
+  * Rackspace::Cloud::LoadBalancer
+  * OS::Heat::ResourceGroup
+  * OS::Trove::Instance
 * An OpenStack username, password, and tenant id.
 * [python-heatclient](https://github.com/openstack/python-heatclient)
 `>= v0.2.8`:
@@ -51,31 +56,52 @@ Parameters
 Parameters can be replaced with your own values when standing up a stack. Use
 the `-P` flag to specify a custom parameter.
 
-* `venv_username`: The system user to use for a Python virtualenv.
-* `app_name`: The name of your application.
-* `flavor`: cloud server size to use. (Default: 4 GB Performance)
-* `virtualenv`: The location of the Python virtualenv (Default: /srv)
-* `venv_username`: Username to use for the Python virtualenv (Default: pydev)
-* `project_name`: The name of your Django project. (Default: mysite)
-* `django_admin_user`: The admin username to login to Django. (Default:
-  djangouser)
-* `django_admin_email`: The email address for the Django admin user. (Default:
-  admin@example.com)
-* `db_user`: The MySQL database user for your Django application. (Default:
-  db_user)
+* `server_hostname`: Host name to give the servers provisioned (Default:
+  django)
+* `project_name`: The name to use to create your Django project. (Default:
+  mysite)
+* `app_name`: The name of your Django application. (Default: myapp)
+* `db_flavor`: Required: Rackspace Cloud Database Flavor. Size is based on
+  amount of RAM for the provisioned instance. (Default: 1GB Instance)
+* `image`: Required: Server image used for all servers that are created as a
+  part of this deployment. (Default: Ubuntu 12.04 LTS (Precise Pangolin))
+* `load_balancer_hostname`: Hostname for the Load Balancer (Default:
+  Django-Load-Balancer)
+* `venv_username`: Username with which to login to the Linux servers. This user
+  will be the owner of the Python Virtual Environment under which Django is
+  installed. (Default: pydev)
+* `db_size`: Database instance size, in GB. min 10, max 150 (Default: 10)
+* `flavor`: Required: Rackspace Cloud Server flavor to use. The size is based
+  on the amount of RAM for the provisioned server. (Default: 4 GB Performance)
+* `server_count`: Number of servers to deploy (Default: 1)
+* `kitchen`: URL for the kitchen to use, fetched using git
+  (Default: https://github.com/rackspace-orchestration-templates/django-clouddb)
+* `virtualenv`: Python Virtual Environment in which Django will be installed.
+  It will be created in the /srv directory. (Default: venv)
+* `datastore_version`: Required: Version of MySQL to run on the Cloud Databases
+  instance. (Default: 5.6)
+* `child_template`: Location of child template
+  (Default: https://raw.github.com/rackspace-orchestration-templates/django-clouddb/master/django-single.yaml)
+* `db_user`: Required: Username for the database. (Default: db_user)
+* `django_admin_email`: Email address (Default: admin@example.com)
+* `django_admin_user`: Administrative username for logging into Django.
+  (Default: djangouser)
+* `chef_version`: Version of chef client to use (Default: 11.12.8)
 
 Outputs
 =======
 Once a stack comes online, use `heat output-list` to see all available outputs.
 Use `heat output-show <OUTPUT NAME>` to get the value fo a specific output.
 
-* `private_key`: SSH private that can be used to login as root to the server(s).
-* `load_balancer_ip`: Public IP address of the Cloud Load Balancer
-* `django_url`: URL to access this Django deployment
-* `db_host`: The hostname of the Cloud Database that was created.
-* `db_user`: The username for logging into `db_host`.
-* `db_pass`: The password for `db_user`.
-* `db_name`: Name of the database hosted on `db_host`.
+* `private_key`: SSH Private Key
+* `load_balancer_ip`: Load Balancer IP
+* `server_ips`: Server IPs
+* `db_user`: Database Username
+* `django_url`: Django URL
+* `db_pass`: Database User Password
+* `db_name`: Database Name
+* `db_host`: Database Host
+* `django_admin_pass`: Django Admin Password
 
 For multi-line values, the response will come in an escaped form. To get rid of
 the escapes, use `echo -e '<STRING>' > file.txt`. For vim users, a substitution
