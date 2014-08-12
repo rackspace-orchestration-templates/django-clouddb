@@ -57,12 +57,12 @@ parameters:
     label: Server Hostname
     description: Host name to give the servers provisioned
     type: string
-    default: django
+    default: django-%index%
     constraints:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9%-]*$"
       description: |
         Must begin with a letter and contain only alphanumeric characters.
 
@@ -70,11 +70,11 @@ parameters:
     label: Server Count
     description: Number of servers to deploy
     type: number
-    default: 1
+    default: 2
     constraints:
     - range:
-        min: 0
-        max: 24
+        min: 1
+        max: 25
       description: Must be between 0 and 24 servers.
 
   image:

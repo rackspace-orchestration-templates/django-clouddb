@@ -57,7 +57,7 @@ Parameters can be replaced with your own values when standing up a stack. Use
 the `-P` flag to specify a custom parameter.
 
 * `server_hostname`: Host name to give the servers provisioned (Default:
-  django)
+  django-%index%)
 * `project_name`: The name to use to create your Django project. (Default:
   mysite)
 * `app_name`: The name of your Django application. (Default: myapp)
@@ -73,7 +73,7 @@ the `-P` flag to specify a custom parameter.
 * `db_size`: Database instance size, in GB. min 10, max 150 (Default: 10)
 * `flavor`: Required: Rackspace Cloud Server flavor to use. The size is based
   on the amount of RAM for the provisioned server. (Default: 4 GB Performance)
-* `server_count`: Number of servers to deploy (Default: 1)
+* `server_count`: Number of servers to deploy (Default: 2)
 * `kitchen`: URL for the kitchen to use, fetched using git
   (Default: https://github.com/rackspace-orchestration-templates/django-clouddb)
 * `virtualenv`: Python Virtual Environment in which Django will be installed.
