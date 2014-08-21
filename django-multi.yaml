@@ -315,6 +315,7 @@ resources:
           database_host: { get_attr: [service_db, hostname] }
           chef_version: { get_param: chef_version }
           kitchen: { get_param: kitchen }
+          parent_stack_id: { get_param: "OS::stack_id" }
 
   load_balancer:
     type: "Rackspace::Cloud::LoadBalancer"
@@ -333,6 +334,8 @@ resources:
       virtualIps:
       - type: PUBLIC
         ipVersion: IPV4
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
 
 outputs:
   private_key:

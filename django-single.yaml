@@ -166,6 +166,11 @@ parameters:
     type: string
     default: 11.12.8
 
+  parent_stack_id:
+    label: Parent Stack ID
+    type: string
+    default: none
+
 resources:
   django_server:
     type: "Rackspace::Cloud::Server"
@@ -175,7 +180,7 @@ resources:
       image: { get_param: image }
       key_name: { get_param: ssh_keypair_name }
       metadata:
-        rax-heat: { get_param: "OS::stack_id" }
+        rax-heat: { get_param: parent_stack_id }
 
   django_setup:
     type: "OS::Heat::ChefSolo"
