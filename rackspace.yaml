@@ -1,6 +1,7 @@
 schema-version: 1.0.0
 application-family: Application Frameworks
 application-name: Django
+application-version: 1.7
 flavor: Multiple Linux servers
 flavor-weight: 1
 reach-info:
