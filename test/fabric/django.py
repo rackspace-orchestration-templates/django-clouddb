@@ -1,6 +1,8 @@
 from fabric.api import env, run, task
 from envassert import detect, file, group, package, port, process, service, \
     user
+from hot.utils.test import get_artifacts
+
 
 
 @task
@@ -17,3 +19,9 @@ def check():
     assert user.is_belonging_group("pydev", "pydev")
     assert process.is_up("apache2")
     assert service.is_enabled("apache2")
+
+
+@task
+def artifacts():
+    env.platform_family = detect.detect()
+    get_artifacts()
