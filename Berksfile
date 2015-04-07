@@ -8,7 +8,7 @@ cookbook 'apt'
 cookbook 'apache2'
 cookbook 'python'
 cookbook 'python-django',
-  :git => 'https://github.com/brint/python-django.git'
+  :git => 'https://github.com/heat-cookbooks/python-django.git'
 cookbook 'sudo'
 cookbook 'rax-firewall',
-  :git => 'https://github.com/brint/rax-firewall-cookbook'
+  :git => 'https://github.com/heat-cookbooks/rax-firewall-cookbook'
