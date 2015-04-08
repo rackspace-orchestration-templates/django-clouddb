@@ -1,8 +1,9 @@
 #
-# Cookbook Name:: firewall
-# Recipe:: default
+# Author:: Tim Smith <tsmith84@gmail.com>
+# Cookbook Name:: iptables
+# Resource:: rule
 #
-# Copyright 2011, Opscode, Inc.
+# Copyright 2015, Tim Smith
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,8 +16,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-package 'ufw' do
-  action :install
-end
+actions :enable, :disable
+
+default_action :enable
+
+attribute :name, :kind_of => String, :name_attribute => true
+attribute :source, :kind_of => String, :default => nil
+attribute :cookbook, :kind_of => String, :default => nil
+attribute :variables, :kind_of => Hash, :default => {}
