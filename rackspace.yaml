@@ -12,18 +12,8 @@ hidden_outputs:
   - db_pass
   - django_admin_pass
 abstract: |
-  Load Balanced Linux servers running [Django](http://djangoproject.com)
-  installed in a [Python](http://python.org) [Virtual
-  Environment](http://virutalenv.org) running behind
-  [Apache](http://httpd.apache.org/) with
-  [mod_wsgi](http://code.google.com/p/modwsgi/). The backend is a Cloud
-  Database running [MySQL](http://www.mysql.com/).
-
-  You may install a Django application by providing a URL to a public git
-  repository or a source distribution tarball that can be installed with pip.
-  You may continue without installing an application at this time and your
-  servers will be created with an empty Django project where you can begin
-  development of your site.
+  Django is an open-source web application framework that allows Python
+  developers to easily create dynamic websites.
 instructions: |
   #### Overview
   The Python Virtual Environment under which Django will be installed will be
