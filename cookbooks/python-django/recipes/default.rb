@@ -48,6 +48,8 @@ bash "create virtual environment /src/#{venv}" do
     not_if { ::File.exists?(File.join("/srv", venv, "bin", "pip")) }
 end
 
+package 'libjpeg-dev'
+
 python_pip "django" do
     virtualenv "/srv/#{venv}"
     user dev_user
