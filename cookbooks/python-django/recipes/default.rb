@@ -143,7 +143,7 @@ end
 bash "syncdb_collectstatic" do
     environment 'HOME' => "/home/#{dev_user}",
         "VIRTUAL_ENV" => "/srv/#{venv}"
-    code "su -c 'cd /srv/#{venv}/#{project_name}; ../bin/python manage.py collectstatic --noinput; ../bin/python manage.py syncdb --noinput' - #{dev_user}"
+    code "su -c 'cd /srv/#{venv}/#{project_name}; ../bin/python manage.py collectstatic --noinput; ../bin/python manage.py migrate --noinput' - #{dev_user}"
     creates "/srv/#{venv}/static"
     action :run
 end
