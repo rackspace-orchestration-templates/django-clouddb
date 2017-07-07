@@ -34,13 +34,10 @@ parameters:
   image:
     description: Server Image
     type: string
-    default: Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
+    default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM) (Orchestration)
     constraints:
     - allowed_values:
-      - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
       - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM) (Orchestration)
-      - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
-      - Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM) (Orchestration)
       - Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM)
       
       description: Must be a supported operating system.
